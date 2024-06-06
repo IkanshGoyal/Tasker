@@ -6,15 +6,17 @@ import { query, collection, getDocs, where } from "firebase/firestore";
 import "./dashboard.css";
 import axios from 'axios';
 import { DayPilot, DayPilotMonth } from "@daypilot/daypilot-lite-react";
-import { FaStar, FaRegStar, FaCheckCircle } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaCheckCircle, FaTrash, FaEdit } from 'react-icons/fa';
 import TaskForm from "./taskform";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function List() {
     const [user, loading, error] = useAuthState(auth);
     const [name, setName] = useState("");
     const [title, setTitle] = useState("Dashboard");
     const [tasks, setTasks] = useState([]);
-    const [taskSummaries, setTaskSummaries] = useState([]);
+    const [taskToEdit, setTaskToEdit] = useState(null);
     const navigate = useNavigate();
 
     const fetchUserName = async () => {
@@ -38,12 +40,40 @@ function List() {
         }
     };
 
+    const handleDeleteTask = async (taskId) => {
+        try {
+            await axios.delete(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`);
+            fetchTasks(); // Refresh the task list
+        } catch (error) {
+            console.error('Error deleting task:', error);
+        }
+    };
+
+    const handleEditTask = (task) => {
+        setTaskToEdit(task);
+        setTitle("Edit Task");
+    };
+
+    const handleTaskSubmission = () => {
+        setTitle("All Tasks");
+        setTaskToEdit(null);
+        fetchTasks();
+        toast.success('Task added/updated successfully!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+
     useEffect(() => {
         if (loading) return;
         if (!user) return navigate("/");
         fetchUserName();
         fetchTasks();
-        //fetchTasksWithSummaries();
     }, [user, loading]);
 
     const renderContent = () => {
@@ -51,7 +81,7 @@ function List() {
             case "Dashboard":
                 return <Dashboard tasks={tasks} />;
             case "All Tasks":
-                return <AllTasks tasks={tasks} fetchTasks={fetchTasks} />;
+                return <AllTasks tasks={tasks} fetchTasks={fetchTasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />;
             case "Completed Tasks":
                 return <CompletedTasks tasks={tasks} />;
             case "Pending Tasks":
@@ -61,7 +91,8 @@ function List() {
             case "Calendar":
                 return <Calendar tasks={tasks} />;
             case "Add new Task":
-                return <TaskForm fetchTasks={fetchTasks} userId={user?.uid} />;
+            case "Edit Task":
+                return <TaskForm fetchTasks={fetchTasks} userId={user?.uid} taskToEdit={taskToEdit} onTaskSubmit={handleTaskSubmission} />;
             default:
                 return <Dashboard tasks={tasks} />;
         }
@@ -91,6 +122,7 @@ function List() {
             <div className="Info">
                 {renderContent()}
             </div>
+            <ToastContainer />
         </div>
     );
 }
@@ -111,7 +143,7 @@ function Dashboard({ tasks }) {
     );
 }
 
-function AllTasks({ tasks, fetchTasks }) {
+function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
     const handleCompleteTask = async (taskId) => {
         try {
             await axios.patch(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`, { isCompleted: true });
@@ -157,6 +189,12 @@ function AllTasks({ tasks, fetchTasks }) {
                         )}
                         <button className="star-btn star" onClick={() => toggleStarredTask(task._id, task.isStarred)}>
                             {task.isStarred ? <FaStar /> : <FaRegStar />}
+                        </button>
+                        <button className="edit-btn" onClick={() => onEditTask(task)}>
+                            <FaEdit /> Edit
+                        </button>
+                        <button className="delete-btn" onClick={() => onDeleteTask(task._id)}>
+                            <FaTrash /> Delete
                         </button>
                     </div>
                 </div>
