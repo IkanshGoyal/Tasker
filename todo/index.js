@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const corsOptions = {
-  origin: "https://tasker-frontend-roan.vercel.app/",
+  origin: "https://tasker-frontend-roan.vercel.app",
   methods: ["POST", "GET", "PATCH"],
   credentials: true
 };
