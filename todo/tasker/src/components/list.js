@@ -111,7 +111,6 @@ function List() {
             <div className="Info">
                 {renderContent()}
             </div>
-            <ToastContainer />
         </div>
     );
 }
