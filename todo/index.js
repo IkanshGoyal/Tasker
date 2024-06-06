@@ -26,7 +26,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const dbURI = 'mongodb+srv://ikanshgoyal:bluTw003Wswi62d9@task.bngy8a3.mongodb.net/test?retryWrites=true&w=majority&appName=Task';
+const dbURI = process.env.MONGODB_URI;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
