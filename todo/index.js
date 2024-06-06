@@ -6,7 +6,9 @@ const cors = require('cors');
 require("dotenv").config();
 
 const corsOptions = {
-    origin: "http://localhost:3000" 
+    origin: "https://tasker-frontend-roan.vercel.app/",
+    methods: ["POST", "GET", "PATCH"],
+    credentials: true
 }
 
 const app = express();
@@ -18,7 +20,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
-const dbURI = 'mongodb://localhost:27017';
+const dbURI = 'mongodb+srv://ikanshgoyal:bluTw003Wswi62d9@task.bngy8a3.mongodb.net/?retryWrites=true&w=majority&appName=Task';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
