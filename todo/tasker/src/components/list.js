@@ -17,55 +17,6 @@ function List() {
     const [taskSummaries, setTaskSummaries] = useState([]);
     const navigate = useNavigate();
 
-    // const GEMINI_API_KEY = 'AIzaSyDo1WMRZmuB-vUZ_8edfHt3HO1mCvcPGG4'; 
-
-    // async function callGeminiAPI(text) {
-    //     const url = `https://api.gemini.ai/v1/summarization?key=${GEMINI_API_KEY}`;
-    //     const data = { text };
-
-    //     try {
-    //         const response = await axios.post(url, data);
-    //         return response.data.summary;
-    //     } catch (error) {
-    //         console.error('Error calling Gemini API:', error);
-    //         return 'Error: Failed to summarize tasks with Gemini API.'; 
-    //     }
-    // }
-
-    // async function summarizeAndPlanTask(task) {
-    //     const title = task.title.trim();
-    //     const notes = task.notes.trim();
-
-    //     try {
-    //         const response = await axios.get(`http://localhost:3001/summarize?text=${encodeURIComponent(`${title} ${notes}`)}`); // Encode query parameter
-    //         const summary = response.data;
-    //         return summary;
-
-    //     } catch (error) {
-    //         console.error('Error fetching summary:', error);
-    //         return 'Error: Failed to summarize task.'; 
-    //     }
-    // }
-
-    // async function fetchTasksWithSummaries() {
-    //     try {
-    //         const response = await axios.get(`http://localhost:7070/tasks/${user?.uid}`);
-    //         const tasks = response.data;
-
-    //         const processedTasks = await Promise.all(
-    //             tasks.map(async task => {
-    //                 const summary = await summarizeAndPlanTask(task); 
-    //                 return summary;
-    //             })
-    //         );
-
-    //         setTasks(tasks); 
-    //         setTaskSummaries(processedTasks); 
-    //     } catch (error) {
-    //         console.error('Error fetching tasks:', error);
-    //     }
-    // }
-
     const fetchUserName = async () => {
         try {
             const q = query(collection(db, "users"), where("uid", "==", user?.uid));
