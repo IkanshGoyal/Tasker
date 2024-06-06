@@ -28,7 +28,7 @@ function Dashboard() {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.get(`https://tasker-ecru-ten.vercel.app/tasks/${user?.email}?search=${search}`);
+            const response = await axios.get(`https://tasker-99joz862c-ikanshgoyals-projects.vercel.app/tasks/${user?.email}?search=${search}`);
             setTasks(response.data);
         } catch (error) {
             console.error('Error fetching tasks:', error);
