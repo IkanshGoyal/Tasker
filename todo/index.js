@@ -5,26 +5,22 @@ const cors = require('cors');
 require('dotenv').config();
 
 const corsOptions = {
-  origin: "https://tasker-frontend-roan.vercel.app",
-  methods: ["POST", "GET", "PATCH"],
-  credentials: true
+    origin: "https://tasker-frontend-roan.vercel.app", 
+    methods: ["POST", "GET", "PATCH"],
+    credentials: true
 };
 
 const app = express();
 const PORT = process.env.PORT || 7070;
 
+app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(cors(corsOptions));
-
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
   next();
 });
-
 
 const dbURI = process.env.MONGODB_URI;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
