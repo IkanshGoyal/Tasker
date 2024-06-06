@@ -31,7 +31,7 @@ function List() {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.get(`https://tasker-ecru-ten.vercel.app/tasks/${user?.uid}`);
+            const response = await axios.get(`https://tasker-ecru-ten.vercel.app:7070/tasks/${user?.uid}`);
             setTasks(response.data);
         } catch (error) {
             console.error('Error fetching tasks:', error);
