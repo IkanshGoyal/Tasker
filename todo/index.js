@@ -7,10 +7,9 @@ require("dotenv").config();
 
 const corsOptions = {
   origin: "https://tasker-frontend-roan.vercel.app", 
-  methods: ["POST", "GET", "PATCH"],
+  methods: ["POST", "GET", "PATCH", "DELETE"], // Added DELETE method
   credentials: true
 };
-
 
 const app = express();
 const PORT = process.env.PORT || 7070;
@@ -31,7 +30,6 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-
 const taskSchema = new mongoose.Schema({
   userId: String,
   title: String,
@@ -46,7 +44,6 @@ const taskSchema = new mongoose.Schema({
 
 const Task = mongoose.model('Task', taskSchema);
 
-
 app.post('/tasks', async (req, res) => {
   const { userId, title, notes, image, links, deadline, isStarred, isCompleted } = req.body;
   try {
@@ -57,7 +54,6 @@ app.post('/tasks', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-
 
 app.get('/tasks/:userId', async (req, res) => {
   const { userId } = req.params;
@@ -80,7 +76,6 @@ app.get('/tasks/:userId', async (req, res) => {
   }
 });
 
-
 app.patch('/tasks/:taskId', async (req, res) => {
   const { taskId } = req.params;
   const { isCompleted } = req.body;
@@ -92,6 +87,15 @@ app.patch('/tasks/:taskId', async (req, res) => {
   }
 });
 
+app.delete('/tasks/:taskId', async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    await Task.findByIdAndDelete(taskId);
+    res.status(200).json({ message: "Task deleted successfully" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
