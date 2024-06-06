@@ -8,7 +8,6 @@ import axios from 'axios';
 import { DayPilot, DayPilotMonth } from "@daypilot/daypilot-lite-react";
 import { FaStar, FaRegStar, FaCheckCircle, FaTrash, FaEdit } from 'react-icons/fa';
 import TaskForm from "./taskform";
-import { ToastContainer, toast } from 'react-toastify';
 
 function List() {
     const [user, loading, error] = useAuthState(auth);
@@ -57,15 +56,6 @@ function List() {
         setTitle("All Tasks");
         setTaskToEdit(null);
         fetchTasks();
-        toast.success('Task added/updated successfully!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
     };
 
     useEffect(() => {
