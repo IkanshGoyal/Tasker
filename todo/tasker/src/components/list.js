@@ -9,7 +9,6 @@ import { DayPilot, DayPilotMonth } from "@daypilot/daypilot-lite-react";
 import { FaStar, FaRegStar, FaCheckCircle, FaTrash, FaEdit } from 'react-icons/fa';
 import TaskForm from "./taskform";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 function List() {
     const [user, loading, error] = useAuthState(auth);
