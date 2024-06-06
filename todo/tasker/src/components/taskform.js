@@ -23,7 +23,7 @@ function TaskForm({ fetchTasks, userId }) {
         const newTask = { userId, title, notes, deadline, links, image, isCompleted: false, isStarred: false };
 
         try {
-            await axios.post(`http://localhost:7070/tasks`, newTask);
+            await axios.post(`https://tasker-ecru-ten.vercel.app/tasks`, newTask);
             fetchTasks();
             setTitle("");
             setNotes("");
