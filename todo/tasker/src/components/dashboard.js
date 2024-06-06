@@ -14,6 +14,8 @@ function Dashboard() {
     const [search, setSearch] = useState('');
     const navigate = useNavigate();
 
+    axios.defaults.withCredentials = true;
+
     const fetchUserName = async () => {
         try {
             const q = query(collection(db, "users"), where("uid", "==", user?.uid));
