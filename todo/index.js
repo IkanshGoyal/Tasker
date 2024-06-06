@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const corsOptions = {
-    origin: "https://tasker-frontend-roan.vercel.app", 
+    origin: "https://tasker-frontend-roan.vercel.app", // specify the exact origin
     methods: ["POST", "GET", "PATCH"],
     credentials: true
 };
@@ -22,10 +22,10 @@ app.use((req, res, next) => {
   next();
 });
 
-const dbURI = process.env.MONGODB_URI;
+const dbURI = 'mongodb+srv://ikanshgoyal:bluTw003Wswi62d9@task.bngy8a3.mongodb.net/test?retryWrites=true&w=majority&appName=Task';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+  .catch(err => console.log('MongoDB connection error:', err));
 
 const taskSchema = new mongoose.Schema({
   userId: String,
@@ -82,6 +82,10 @@ app.patch('/tasks/:taskId', async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
+});
+
+app.use((req, res) => {
+  res.status(404).send('Route not found');
 });
 
 app.listen(PORT, () => {
