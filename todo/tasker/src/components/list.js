@@ -31,7 +31,7 @@ function List() {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.get(`http://localhost:7070/tasks/${user?.uid}`);
+            const response = await axios.get(`https://tasker-ecru-ten.vercel.app/tasks/${user?.uid}`);
             setTasks(response.data);
         } catch (error) {
             console.error('Error fetching tasks:', error);
@@ -114,7 +114,7 @@ function Dashboard({ tasks }) {
 function AllTasks({ tasks, fetchTasks }) {
     const handleCompleteTask = async (taskId) => {
         try {
-            await axios.patch(`http://localhost:7070/tasks/${taskId}`, { isCompleted: true });
+            await axios.patch(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`, { isCompleted: true });
             fetchTasks(); // Refresh the task list
         } catch (error) {
             console.error('Error marking task as complete:', error);
@@ -123,7 +123,7 @@ function AllTasks({ tasks, fetchTasks }) {
 
     const toggleStarredTask = async (taskId, isStarred) => {
         try {
-            await axios.patch(`http://localhost:7070/tasks/${taskId}`, { isStarred: !isStarred });
+            await axios.patch(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`, { isStarred: !isStarred });
             fetchTasks(); // Refresh the task list
         } catch (error) {
             console.error('Error toggling starred status:', error);
