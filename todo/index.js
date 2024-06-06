@@ -2,20 +2,24 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-require('dotenv').config();
+
+require("dotenv").config();
 
 const corsOptions = {
-    origin: "https://tasker-frontend-roan.vercel.app", // specify the exact origin
-    methods: ["POST", "GET", "PATCH"],
-    credentials: true
+  origin: "https://tasker-frontend-roan.vercel.app", 
+  methods: ["POST", "GET", "PATCH"],
+  credentials: true
 };
+
 
 const app = express();
 const PORT = process.env.PORT || 7070;
 
-app.use(cors(corsOptions));
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.json({ limit: '50mb' })); 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+app.use(bodyParser.json());
+app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
@@ -25,7 +29,8 @@ app.use((req, res, next) => {
 const dbURI = 'mongodb+srv://ikanshgoyal:bluTw003Wswi62d9@task.bngy8a3.mongodb.net/test?retryWrites=true&w=majority&appName=Task';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB connection error:', err));
+  .catch(err => console.log(err));
+
 
 const taskSchema = new mongoose.Schema({
   userId: String,
@@ -41,6 +46,7 @@ const taskSchema = new mongoose.Schema({
 
 const Task = mongoose.model('Task', taskSchema);
 
+
 app.post('/tasks', async (req, res) => {
   const { userId, title, notes, image, links, deadline, isStarred, isCompleted } = req.body;
   try {
@@ -51,6 +57,7 @@ app.post('/tasks', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
 
 app.get('/tasks/:userId', async (req, res) => {
   const { userId } = req.params;
@@ -73,6 +80,7 @@ app.get('/tasks/:userId', async (req, res) => {
   }
 });
 
+
 app.patch('/tasks/:taskId', async (req, res) => {
   const { taskId } = req.params;
   const { isCompleted } = req.body;
@@ -84,9 +92,6 @@ app.patch('/tasks/:taskId', async (req, res) => {
   }
 });
 
-app.use((req, res) => {
-  res.status(404).send('Route not found');
-});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
