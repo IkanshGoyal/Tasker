@@ -23,7 +23,7 @@ function TaskForm({ fetchTasks, userId }) {
         const newTask = { userId, title, notes, deadline, links, image, isCompleted: false, isStarred: false };
 
         try {
-            await axios.post(`https://tasker-ecru-ten.vercel.app/tasks`, newTask);
+            await axios.post(`http://localhost:7070/tasks`, newTask);
             fetchTasks();
             setTitle("");
             setNotes("");
@@ -41,11 +41,11 @@ function TaskForm({ fetchTasks, userId }) {
             <form onSubmit={handleSubmit}>
                 <label>
                     Title:
-                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                    <input type="text" placeholder="Enter Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
                 </label>
                 <label>
                     Notes:
-                    <textarea value={notes} onChange={(e) => setNotes(e.target.value)} required />
+                    <textarea value={notes} placeholder="Add notes" onChange={(e) => setNotes(e.target.value)} required />
                 </label>
                 <label>
                     Deadline:
