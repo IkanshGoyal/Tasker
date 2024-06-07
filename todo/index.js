@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const corsOptions = {
   origin: "https://tasker-frontend-roan.vercel.app", 
-  methods: ["POST", "GET", "PATCH", "DELETE"], // Added DELETE method
+  methods: ["POST", "GET", "PATCH", "DELETE"],
   credentials: true
 };
 
@@ -17,7 +17,6 @@ const PORT = process.env.PORT || 7070;
 app.use(bodyParser.json({ limit: '50mb' })); 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
@@ -78,9 +77,9 @@ app.get('/tasks/:userId', async (req, res) => {
 
 app.patch('/tasks/:taskId', async (req, res) => {
   const { taskId } = req.params;
-  const { isCompleted } = req.body;
+  const updateFields = req.body; // Allow multiple fields to be updated
   try {
-    const updatedTask = await Task.findByIdAndUpdate(taskId, { isCompleted }, { new: true });
+    const updatedTask = await Task.findByIdAndUpdate(taskId, updateFields, { new: true });
     res.status(200).json(updatedTask);
   } catch (err) {
     res.status(400).json({ error: err.message });
