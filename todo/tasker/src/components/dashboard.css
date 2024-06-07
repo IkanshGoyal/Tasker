@@ -204,6 +204,10 @@ h2 {
     margin-bottom: 20px;
 }
 
+input {
+    color: black;
+}
+
 .task-container {
     display: flex;
     flex-direction: column;
