@@ -76,7 +76,7 @@ function List() {
     const renderContent = () => {
         switch (title) {
             case "Dashboard":
-                return <Dashboard tasks={tasks} summary={taskSummary} />;
+                return <Dashboard tasks={tasks} />;
             case "All Tasks":
                 return <AllTasks tasks={filteredTasks} fetchTasks={fetchTasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />;
             case "Completed Tasks":
