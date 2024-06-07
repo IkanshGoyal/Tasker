@@ -200,22 +200,20 @@ button:hover {
     text-align: center;
 }
 
+h2 {
+    margin-bottom: 20px;
+}
+
 .task-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     max-height: 2000px;
     margin-bottom: 10px;
-}
-
-h2 {
-    margin-bottom: 20px;
-}
-
-.task-container {
     padding: 20px;
     max-width: 800px;
     margin: 0 auto;
+    margin-bottom: 50px;
 }
 
 .task-card {
