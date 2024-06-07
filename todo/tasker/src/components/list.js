@@ -3,11 +3,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "./firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
-import "./dashboard.css";
 import axios from 'axios';
 import { DayPilot, DayPilotMonth } from "@daypilot/daypilot-lite-react";
 import { FaStar, FaRegStar, FaCheckCircle, FaTrash, FaEdit } from 'react-icons/fa';
 import TaskForm from "./taskform";
+import "./dashboard.css";
 
 function List() {
     const [user, loading, error] = useAuthState(auth);
@@ -15,7 +15,9 @@ function List() {
     const [title, setTitle] = useState("Dashboard");
     const [tasks, setTasks] = useState([]);
     const [taskToEdit, setTaskToEdit] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
+
 
     const fetchUserName = async () => {
         try {
@@ -41,7 +43,7 @@ function List() {
     const handleDeleteTask = async (taskId) => {
         try {
             await axios.delete(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`);
-            fetchTasks(); // Refresh the task list
+            fetchTasks(); 
         } catch (error) {
             console.error('Error deleting task:', error);
         }
@@ -65,12 +67,18 @@ function List() {
         fetchTasks();
     }, [user, loading]);
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filteredTasks = tasks.filter(task => task.title.toLowerCase().includes(searchQuery.toLowerCase()));
+
     const renderContent = () => {
         switch (title) {
             case "Dashboard":
-                return <Dashboard tasks={tasks} />;
+                return <Dashboard tasks={tasks} summary={taskSummary} />;
             case "All Tasks":
-                return <AllTasks tasks={tasks} fetchTasks={fetchTasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />;
+                return <AllTasks tasks={filteredTasks} fetchTasks={fetchTasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />;
             case "Completed Tasks":
                 return <CompletedTasks tasks={tasks} />;
             case "Pending Tasks":
@@ -82,6 +90,8 @@ function List() {
             case "Add new Task":
             case "Edit Task":
                 return <TaskForm fetchTasks={fetchTasks} userId={user?.uid} taskToEdit={taskToEdit} onTaskSubmit={handleTaskSubmission} />;
+            case "Search":
+                return <AllTasks tasks={filteredTasks} fetchTasks={fetchTasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />;
             default:
                 return <Dashboard tasks={tasks} />;
         }
@@ -98,7 +108,13 @@ function List() {
                 </div>
             </div>
             <div className="Menu">
-                <input className="searchbtn" type="text" placeholder="Search Tasks" />
+                <input
+                    className="searchbtn"
+                    type="text"
+                    placeholder="Search Tasks"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
                 <button onClick={() => setTitle("Search")}>Search</button>
                 <button onClick={() => setTitle("Dashboard")}>Dashboard</button>
                 <button onClick={() => setTitle("All Tasks")}>All Tasks</button>
@@ -120,13 +136,37 @@ function Dashboard({ tasks }) {
     const completedTasks = tasks.filter(task => task.isCompleted).length;
     const pendingTasks = tasks.filter(task => !task.isCompleted).length;
     const starredTasks = tasks.filter(task => task.isStarred).length;
+    const upcomingTasks = tasks.filter(task => new Date(task.deadline) > new Date()).length;
+    const overdueTasks = tasks.filter(task => new Date(task.deadline) < new Date() && !task.isCompleted).length;
 
     return (
-        <div className="details">
-            <p>Total Tasks: {totalTasks}</p>
-            <p>Completed Tasks: {completedTasks}</p>
-            <p>Pending Tasks: {pendingTasks}</p>
-            <p>Starred Tasks: {starredTasks}</p>
+        <div className="dashboard">
+            <div className="dashboard-summary">
+                <div className="summary-card">
+                    <h4>Total Tasks</h4>
+                    <p>{totalTasks}</p>
+                </div>
+                <div className="summary-card">
+                    <h4>Completed Tasks</h4>
+                    <p>{completedTasks}</p>
+                </div>
+                <div className="summary-card">
+                    <h4>Pending Tasks</h4>
+                    <p>{pendingTasks}</p>
+                </div>
+                <div className="summary-card">
+                    <h4>Starred Tasks</h4>
+                    <p>{starredTasks}</p>
+                </div>
+                <div className="summary-card">
+                    <h4>Upcoming Tasks</h4>
+                    <p>{upcomingTasks}</p>
+                </div>
+                <div className="summary-card">
+                    <h4>Overdue Tasks</h4>
+                    <p>{overdueTasks}</p>
+                </div>
+            </div>
         </div>
     );
 }
@@ -135,7 +175,7 @@ function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
     const handleCompleteTask = async (taskId) => {
         try {
             await axios.patch(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`, { isCompleted: true });
-            fetchTasks(); // Refresh the task list
+            fetchTasks(); 
         } catch (error) {
             console.error('Error marking task as complete:', error);
         }
@@ -144,7 +184,7 @@ function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
     const toggleStarredTask = async (taskId, isStarred) => {
         try {
             await axios.patch(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`, { isStarred: !isStarred });
-            fetchTasks(); // Refresh the task list
+            fetchTasks(); 
         } catch (error) {
             console.error('Error toggling starred status:', error);
         }
@@ -160,7 +200,7 @@ function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
                         <p><strong>Deadline:</strong> {new Date(task.deadline).toLocaleDateString()}</p>
                         <p><strong>Status:</strong> {task.isCompleted ? "Completed" : "Pending"}</p>
                         {task.links && task.links.length > 0 && (
-                            <div className="task-links">
+                            <div>
                                 <strong>Links:</strong>
                                 <ul>
                                     {task.links.map((link, index) => (
@@ -169,21 +209,14 @@ function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
                                 </ul>
                             </div>
                         )}
-                        {task.image && <img src={task.image} alt={task.title} className="task-image" />}
-                        {!task.isCompleted && (
-                            <button className="complete-btn complete" onClick={() => handleCompleteTask(task._id)}>
-                                <FaCheckCircle /> Mark as Complete
-                            </button>
-                        )}
-                        <button className="star-btn star" onClick={() => toggleStarredTask(task._id, task.isStarred)}>
+                    </div>
+                    <div className="task-actions">
+                        <button onClick={() => toggleStarredTask(task._id, task.isStarred)}>
                             {task.isStarred ? <FaStar /> : <FaRegStar />}
                         </button>
-                        <button className="edit-btn" onClick={() => onEditTask(task)}>
-                            <FaEdit /> Edit
-                        </button>
-                        <button className="delete-btn" onClick={() => onDeleteTask(task._id)}>
-                            <FaTrash /> Delete
-                        </button>
+                        <button onClick={() => handleCompleteTask(task._id)}><FaCheckCircle /></button>
+                        <button onClick={() => onEditTask(task)}><FaEdit /></button>
+                        <button onClick={() => onDeleteTask(task._id)}><FaTrash /></button>
                     </div>
                 </div>
             ))}
@@ -192,26 +225,17 @@ function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
 }
 
 function CompletedTasks({ tasks }) {
+    const completedTasks = tasks.filter(task => task.isCompleted);
+
     return (
         <div className="task-container">
-            {tasks.filter(task => task.isCompleted).map((task) => (
+            {completedTasks.map((task) => (
                 <div key={task._id} className="task-card">
                     <div className="task-details">
                         <h3 className="task-header">{task.title}</h3>
                         <p><strong>Notes:</strong> {task.notes}</p>
                         <p><strong>Deadline:</strong> {new Date(task.deadline).toLocaleDateString()}</p>
                         <p><strong>Status:</strong> {task.isCompleted ? "Completed" : "Pending"}</p>
-                        {task.links && task.links.length > 0 && (
-                            <div className="task-links">
-                                <strong>Links:</strong>
-                                <ul>
-                                    {task.links.map((link, index) => (
-                                        <li key={index}><a href={link} target="_blank" rel="noopener noreferrer">{link}</a></li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-                        {task.image && <img src={task.image} alt={task.title} className="task-image" />}
                     </div>
                 </div>
             ))}
@@ -220,26 +244,17 @@ function CompletedTasks({ tasks }) {
 }
 
 function PendingTasks({ tasks }) {
+    const pendingTasks = tasks.filter(task => !task.isCompleted);
+
     return (
         <div className="task-container">
-            {tasks.filter(task => !task.isCompleted).map((task) => (
+            {pendingTasks.map((task) => (
                 <div key={task._id} className="task-card">
                     <div className="task-details">
                         <h3 className="task-header">{task.title}</h3>
                         <p><strong>Notes:</strong> {task.notes}</p>
                         <p><strong>Deadline:</strong> {new Date(task.deadline).toLocaleDateString()}</p>
                         <p><strong>Status:</strong> {task.isCompleted ? "Completed" : "Pending"}</p>
-                        {task.links && task.links.length > 0 && (
-                            <div className="task-links">
-                                <strong>Links:</strong>
-                                <ul>
-                                    {task.links.map((link, index) => (
-                                        <li key={index}><a href={link} target="_blank" rel="noopener noreferrer">{link}</a></li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-                        {task.image && <img src={task.image} alt={task.title} className="task-image" />}
                     </div>
                 </div>
             ))}
@@ -248,28 +263,19 @@ function PendingTasks({ tasks }) {
 }
 
 function StarredTasks({ tasks }) {
+    const starredTasks = tasks.filter(task => task.isStarred);
+
     return (
         <div className="task-container">
-            {tasks.filter(task => task.isStarred).map((task) => (
+            {starredTasks.map((task) => (
                 <div key={task._id} className="task-card">
-                <div className="task-details">
-                    <h3 className="task-header">{task.title}</h3>
-                    <p><strong>Notes:</strong> {task.notes}</p>
-                    <p><strong>Deadline:</strong> {new Date(task.deadline).toLocaleDateString()}</p>
-                    <p><strong>Status:</strong> {task.isCompleted ? "Completed" : "Pending"}</p>
-                    {task.links && task.links.length > 0 && (
-                        <div className="task-links">
-                            <strong>Links:</strong>
-                            <ul>
-                                {task.links.map((link, index) => (
-                                    <li key={index}><a href={link} target="_blank" rel="noopener noreferrer">{link}</a></li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                    {task.image && <img src={task.image} alt={task.title} className="task-image" />}
+                    <div className="task-details">
+                        <h3 className="task-header">{task.title}</h3>
+                        <p><strong>Notes:</strong> {task.notes}</p>
+                        <p><strong>Deadline:</strong> {new Date(task.deadline).toLocaleDateString()}</p>
+                        <p><strong>Status:</strong> {task.isCompleted ? "Completed" : "Pending"}</p>
+                    </div>
                 </div>
-            </div>
             ))}
         </div>
     );
@@ -279,12 +285,12 @@ function Calendar({ tasks }) {
     const events = tasks.map(task => ({
         id: task._id,
         text: task.title,
-        start: task.deadline,
-        end: task.deadline,
+        start: new Date(task.deadline).toISOString(),
+        end: new Date(task.deadline).toISOString(),
     }));
 
     return (
-        <div className="calender">
+        <div>
             <DayPilotMonth
                 startDate={DayPilot.Date.today()}
                 events={events}
