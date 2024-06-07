@@ -208,11 +208,11 @@ function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
                         <p><strong>Notes:</strong> {task.notes}</p>
                         <p><strong>Deadline:</strong> {new Date(task.deadline).toLocaleDateString()}</p>
                         <p><strong>Status:</strong> {task.isCompleted ? "Completed" : "Pending"}</p>
-                        {task.links && task.links.length > 0 && (
+                        {task.links && task.links.filter(link => link).length > 0 && (
                             <div>
                                 <strong>Links:</strong>
                                 <ul>
-                                    {task.links.map((link, index) => (
+                                    {task.links.filter(link => link).map((link, index) => (
                                         <li key={index}><a href={link} target="_blank" rel="noopener noreferrer">{link}</a></li>
                                     ))}
                                 </ul>
