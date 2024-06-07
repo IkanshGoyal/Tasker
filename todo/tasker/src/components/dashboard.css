@@ -1,3 +1,4 @@
+/* General Styles */
 .container {
     height: 100vh;
     width: 100vw;
@@ -20,9 +21,12 @@
     text-align: center;
     padding: 0;
     margin: 0;
+    z-index: 7;
 }
 
-.Navbar > h3, h5, p {
+.Navbar>h3,
+h5,
+p {
     padding: 0px;
     margin: auto;
 }
@@ -46,8 +50,6 @@
     background-color: #1F1F27;
 }
 
-/*button color #444756 */
-
 .searchbtn {
     padding: 5px 10px;
     margin: 0;
@@ -60,7 +62,7 @@
     margin-bottom: 10px;
 }
 
-.Menu > button {
+.Menu>button {
     width: 220px;
     font-size: 16px;
     font-weight: 600;
@@ -70,10 +72,6 @@
     padding: 10px 0px;
     text-align: left;
     padding-left: 25px;
-}
-
-.Add {
-    bottom: 0px;
 }
 
 .logout {
@@ -97,7 +95,7 @@
     background-color: #1F1F27;
 }
 
-.Navbar > h3 {
+.Navbar>h3 {
     margin-left: 45px;
 }
 
@@ -106,7 +104,6 @@ button:hover {
     cursor: pointer;
     background-color: #010101;
 }
-
 
 .Info {
     right: 0;
@@ -128,6 +125,7 @@ button:hover {
     overflow: hidden;
     border-radius: 15px;
 }
+
 .month_default_event_inner {
     background: #636363;
     border-color: #777777;
@@ -139,8 +137,8 @@ button:hover {
 .month_default_event_bar {
     left: 0px;
     width: 30px;
-
 }
+
 .month_default_event_bar_inner {
     background: #888888;
     border-radius: 8px;
@@ -149,18 +147,35 @@ button:hover {
 
 .dashboard-summary {
     display: flex;
-    justify-content: space-around;
-    width: 100%;
+    margin: auto;
+    width: 500px;
+    gap: 50px;
+    flex-wrap: wrap;
     margin-bottom: 20px;
+    margin-top: 40px;
 }
 
 .summary-card {
-    background-color: white;
-    padding: 20px;
+    padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    color: aliceblue;
     width: 150px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.13);
+}
+
+.summary-card>h {
+    font-weight: 800;
+    font-size: 26px;
+}
+
+.summary-card>p {
+    font-weight: 800;
+    font-size: 30px;
 }
 
 .task-actions {
@@ -207,6 +222,7 @@ h2 {
     background: #f9f9f9;
     width: 600px;
     padding: 15px;
+    margin-top: 20px;
     margin-bottom: 15px;
     position: relative;
     border-radius: 10px;
@@ -233,7 +249,9 @@ h2 {
     background-color: rgba(255, 255, 255, 0.13);
 }
 
-.complete, .edit-btn, .delete-btn {
+.complete,
+.edit-btn,
+.delete-btn {
     cursor: pointer;
     padding: 10px;
     margin-top: 15px;
@@ -275,7 +293,7 @@ h2 {
     background-color: rgba(255, 255, 255, 0.13);
     color: white;
     width: 300px;
-    margin-top: 20px;
+    margin-top: 50px;
 }
 
 .task-form h2 {
@@ -330,4 +348,313 @@ h2 {
     height: auto;
     margin-top: 10px;
     border-radius: 8px;
+}
+
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Navbar {
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 35px;
+    position: fixed;
+    color: white;
+    background-color: #010101;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.Navbar>h3,
+h5,
+p {
+    padding: 0px;
+    margin: auto;
+}
+
+.User {
+    display: flex;
+    width: 380px;
+    flex-direction: row;
+}
+
+.Hamburger {
+    display: none;
+}
+
+.Hamburger .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 4px 0;
+}
+
+.logout {
+    width: 220px;
+    font-size: 16px;
+    font-weight: 600;
+    border: 0;
+    color: white;
+    padding: 10px 0px;
+    text-align: left;
+    padding-left: 25px;
+    width: 90px;
+    margin-right: 40px;
+    border-radius: 12px;
+    padding: 0;
+    text-align: center;
+    background-color: #010101;
+}
+
+.logout:hover {
+    background-color: #1F1F27;
+}
+
+.Navbar>h3 {
+    margin-left: 45px;
+}
+
+button:hover {
+    opacity: 80%;
+    cursor: pointer;
+    background-color: #010101;
+}
+
+@media screen and (max-width: 768px) {
+    .Navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .Navbar h3 {
+        margin: 0;
+        margin-left: 50px;
+        padding: 5px;
+    }
+
+    .Menu {
+        width: 100%;
+        position: static;
+        flex-direction: row;
+        justify-content: flex-start;
+        height: auto;
+    }
+
+    .task-container {
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 50px;
+        padding: 0;
+    }
+
+    .task-card {
+        width: 85%;
+        margin-top: 20px;
+    }
+
+    .task-form {
+        width: 300px;
+        margin-bottom: 50px;
+        margin-top: 60px;
+    }
+
+    .summary-card {
+        width: 100%;
+    }
+
+    .User {
+        display: none;
+    }
+
+    .dashboard-summary {
+        flex-direction: column;
+        width: 250px;
+        height: 1220px;
+        display: flex;
+        margin: auto;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        margin-top: 60px;
+    }
+
+    .Hamburger {
+        display: block;
+        position: fixed;
+        top: 0%;
+        left: 1%;
+        margin-left: 10px;
+        margin-top: 5px;
+        cursor: pointer;
+    }
+
+    .Menu {
+        display: flex;
+        left: 0px;
+        flex-direction: column;
+        margin: 0px;
+        position: fixed;
+        top: 35px;
+        height: 97vh;
+        padding-top: 20px;
+        backdrop-filter: blur(5px);
+        background-color: #1F1F27;
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(-100%);
+        width: 100%;
+        text-align: center;
+        z-index: 5;
+        align-items: center;
+    }
+
+    .Menu.open {
+        transform: translateX(0);
+    }
+
+    .Info {
+        top: 35px;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+
+    .searchbar {
+        width: 80%;
+        padding: 5px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .searchbtn {
+        padding: 5px 10px;
+        margin: 0;
+        font-size: 14px;
+        width: 140px;
+        border-radius: 8px;
+        border: 0;
+        background-color: #b0b3c1;
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    .Menu>button {
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #1F1F27;
+        border: 0;
+        color: white;
+        padding: 20px 0px;
+        text-align: center;
+        margin: 0;
+    }
+
+    .Cal {
+        margin-top: 50px;
+    }
+
+    .title {
+        position: fixed;
+        left: 30%;
+        font-size: 20px;
+        margin-top: 5px;
+    }
+}
+
+@media (min-width: 769px) {
+    .Info {
+        width: calc(100vw - 220px);
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .Navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        height: 35px;
+        width: 100%;
+    }
+
+    .title {
+        position: fixed;
+        left: 30%;
+    }
+
+    .Navbar h3 {
+        margin: 0;
+        margin-left: 50px;
+        padding: 5px;
+    }
+
+    .User {
+        display: none;
+    }
+
+    .Menu {
+        display: flex;
+        left: 0px;
+        flex-direction: column;
+        margin: 0px;
+        position: fixed;
+        top: 35px;
+        height: 97vh;
+        padding-top: 20px;
+        backdrop-filter: blur(5px);
+        background-color: #1F1F27;
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(-100%);
+        width: 100%;
+        text-align: center;
+        z-index: 5;
+        align-items: center;
+    }
+
+    .Menu.open {
+        transform: translateX(0);
+    }
+
+    .Info {
+        width: 100%;
+        position: absolute;
+        padding: 0;
+    }
+
+    .task-card {
+        width: 80%;
+    }
+
+    .dashboard-summary {
+        flex-direction: column;
+        width: 100vw;
+        height: 1000px;
+        display: flex;
+        padding-top: 20px;
+        margin: 0;
+        align-items: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .summary-card {
+        width: 200px;
+        padding: 10px;
+        margin: 0;
+    }
 }
