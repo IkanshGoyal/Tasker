@@ -16,8 +16,12 @@ function List() {
     const [tasks, setTasks] = useState([]);
     const [taskToEdit, setTaskToEdit] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
 
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
+    };
 
     const fetchUserName = async () => {
         try {
@@ -43,7 +47,7 @@ function List() {
     const handleDeleteTask = async (taskId) => {
         try {
             await axios.delete(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`);
-            fetchTasks(); 
+            fetchTasks();
         } catch (error) {
             console.error('Error deleting task:', error);
         }
@@ -101,13 +105,18 @@ function List() {
         <div className="todo">
             <div className="Navbar">
                 <h3>TASKER</h3>
-                <h3>{title}</h3>
+                <h3 className="title">{title}</h3>
                 <div className="User">
                     <h5>Welcome, {name}</h5>
                     <button className="logout" onClick={logout}>Logout</button>
                 </div>
+                <div className="Hamburger" onClick={toggleMenu}>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                </div>
             </div>
-            <div className="Menu">
+            <div className={`Menu ${menuOpen ? 'open' : ''}`}>
                 <input
                     className="searchbtn"
                     type="text"
@@ -175,7 +184,7 @@ function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
     const handleCompleteTask = async (taskId) => {
         try {
             await axios.patch(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`, { isCompleted: true });
-            fetchTasks(); 
+            fetchTasks();
         } catch (error) {
             console.error('Error marking task as complete:', error);
         }
@@ -184,7 +193,7 @@ function AllTasks({ tasks, fetchTasks, onEditTask, onDeleteTask }) {
     const toggleStarredTask = async (taskId, isStarred) => {
         try {
             await axios.patch(`https://tasker-ecru-ten.vercel.app/tasks/${taskId}`, { isStarred: !isStarred });
-            fetchTasks(); 
+            fetchTasks();
         } catch (error) {
             console.error('Error toggling starred status:', error);
         }
@@ -290,7 +299,7 @@ function Calendar({ tasks }) {
     }));
 
     return (
-        <div>
+        <div className="Cal">
             <DayPilotMonth
                 startDate={DayPilot.Date.today()}
                 events={events}
